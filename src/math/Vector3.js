@@ -640,9 +640,15 @@ THREE.Vector3.prototype = {
 
 	lerp: function ( v, alpha ) {
 
-		this.x += ( v.x - this.x ) * alpha;
-		this.y += ( v.y - this.y ) * alpha;
-		this.z += ( v.z - this.z ) * alpha;
+		// this.x += ( v.x - this.x ) * alpha;
+		// this.y += ( v.y - this.y ) * alpha;
+		// this.z += ( v.z - this.z ) * alpha;
+		var v_alpha = SIMD.Float32x4(alpha, alpha, alpha);
+		var v = SIMD.Float32x4(v.x, v.y, v.z);
+		this.vector3d = SIMD.Float32x4.mul(
+											SIMD.Float32x4.sub(v, this.vector3d),
+											v_alpha
+										);
 
 		return this;
 
@@ -665,11 +671,16 @@ THREE.Vector3.prototype = {
 
 		}
 
-		var x = this.x, y = this.y, z = this.z;
+		// var x = this.x, y = this.y, z = this.z;
+		var x = SIMD.Float32x4.extractLane(this.vector3d, 0);
+		var y = SIMD.Float32x4.extractLane(this.vector3d, 1);
+		var z = SIMD.Float32x4.extractLane(this.vector3d, 2);
 
-		this.x = y * v.z - z * v.y;
-		this.y = z * v.x - x * v.z;
-		this.z = x * v.y - y * v.x;
+		var newX = y * v.z - z * v.y;
+		var newY = z * v.x - x * v.z;
+		var newZ = x * v.y - y * v.x;
+
+		this.vector3d = SIMD.Float32x4(newX, newY, newZ);
 
 		return this;
 
@@ -680,9 +691,11 @@ THREE.Vector3.prototype = {
 		var ax = a.x, ay = a.y, az = a.z;
 		var bx = b.x, by = b.y, bz = b.z;
 
-		this.x = ay * bz - az * by;
-		this.y = az * bx - ax * bz;
-		this.z = ax * by - ay * bx;
+		var newX = ay * bz - az * by;
+		var newY = az * bx - ax * bz;
+		var newZ  = ax * by - ay * bx;
+
+		this.vector3d = SIMD.Float32x4(newX, newY, newZ);
 
 		return this;
 
