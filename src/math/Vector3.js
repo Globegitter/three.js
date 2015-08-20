@@ -12,6 +12,7 @@ THREE.Vector3 = function ( x, y, z ) {
 	this.x = x || 0;
 	this.y = y || 0;
 	this.z = z || 0;
+	this.vector3d = SIMD.Float32x4(x, y, z);
 
 };
 
@@ -21,9 +22,10 @@ THREE.Vector3.prototype = {
 
 	set: function ( x, y, z ) {
 
-		this.x = x;
-		this.y = y;
-		this.z = z;
+		// this.x = x;
+		// this.y = y;
+		// this.z = z;
+		this.vector3d = SIMD.Float32x4(x, y, z);
 
 		return this;
 
@@ -31,7 +33,8 @@ THREE.Vector3.prototype = {
 
 	setX: function ( x ) {
 
-		this.x = x;
+		// this.x = x;
+		this.vector3d = SIMD.Float32x4.replaceLane(this.vector3d, 0, x);
 
 		return this;
 
@@ -39,7 +42,8 @@ THREE.Vector3.prototype = {
 
 	setY: function ( y ) {
 
-		this.y = y;
+		// this.y = y;
+		this.vector3d = SIMD.Float32x4.replaceLane(this.vector3d, 1, y);
 
 		return this;
 
@@ -47,7 +51,8 @@ THREE.Vector3.prototype = {
 
 	setZ: function ( z ) {
 
-		this.z = z;
+		// this.z = z;
+		this.vector3d = SIMD.Float32x4.replaceLane(this.vector3d, 2, z);
 
 		return this;
 
@@ -55,35 +60,30 @@ THREE.Vector3.prototype = {
 
 	setComponent: function ( index, value ) {
 
-		switch ( index ) {
-
-			case 0: this.x = value; break;
-			case 1: this.y = value; break;
-			case 2: this.z = value; break;
-			default: throw new Error( 'index is out of range: ' + index );
-
+		if (index >= 0 && index <= 2) {
+			this.vector3d = SIMD.Float32x4.replaceLane(this.vector3d, index, value);
+		} else {
+			throw new Error( 'index is out of range: ' + index );
 		}
 
 	},
 
 	getComponent: function ( index ) {
 
-		switch ( index ) {
-
-			case 0: return this.x;
-			case 1: return this.y;
-			case 2: return this.z;
-			default: throw new Error( 'index is out of range: ' + index );
-
+		if (index >= 0 && index <= 2) {
+			return SIMD.Float32x4.extractLane(this.vector3d, index);
+		} else {
+			throw new Error( 'index is out of range: ' + index );
 		}
 
 	},
 
 	copy: function ( v ) {
 
-		this.x = v.x;
-		this.y = v.y;
-		this.z = v.z;
+		// this.x = v.x;
+		// this.y = v.y;
+		// this.z = v.z;
+		this.vector3d = SIMD.Float32x4(v.x, v.y, v.z);
 
 		return this;
 
@@ -98,9 +98,10 @@ THREE.Vector3.prototype = {
 
 		}
 
-		this.x += v.x;
-		this.y += v.y;
-		this.z += v.z;
+		// this.x += v.x;
+		// this.y += v.y;
+		// this.z += v.z;
+		this.vector3d = SIMD.Float32x4.add(this.vector3d, SIMD.Float32x4(v.x, v.y, v.z));
 
 		return this;
 
@@ -108,9 +109,10 @@ THREE.Vector3.prototype = {
 
 	addScalar: function ( s ) {
 
-		this.x += s;
-		this.y += s;
-		this.z += s;
+		// this.x += s;
+		// this.y += s;
+		// this.z += s;
+		this.vector3d = SIMD.Float32x4.add(this.vector3d, SIMD.Float32x4(s, s, s));
 
 		return this;
 
@@ -118,9 +120,10 @@ THREE.Vector3.prototype = {
 
 	addVectors: function ( a, b ) {
 
-		this.x = a.x + b.x;
-		this.y = a.y + b.y;
-		this.z = a.z + b.z;
+		// this.x = a.x + b.x;
+		// this.y = a.y + b.y;
+		// this.z = a.z + b.z;
+		this.vector3d = SIMD.Float32x4.add(SIMD.Float32x4(a.x, a.y, a.z), SIMD.Float32x4(b.x, b.y, b.z));
 
 		return this;
 
@@ -135,19 +138,21 @@ THREE.Vector3.prototype = {
 
 		}
 
-		this.x -= v.x;
-		this.y -= v.y;
-		this.z -= v.z;
+		// this.x -= v.x;
+		// this.y -= v.y;
+		// this.z -= v.z;
+		this.vector3d = SIMD.Float32x4.sub(this.vector3d, SIMD.Float32x4(v.x, v.y, v.z));
 
 		return this;
 
 	},
-	
+
 	subScalar: function ( s ) {
 
-		this.x -= s;
-		this.y -= s;
-		this.z -= s;
+		// this.x -= s;
+		// this.y -= s;
+		// this.z -= s;
+		this.vector3d = SIMD.Float32x4.sub(this.vector3d, SIMD.Float32x4(s, s, s));
 
 		return this;
 
@@ -155,9 +160,10 @@ THREE.Vector3.prototype = {
 
 	subVectors: function ( a, b ) {
 
-		this.x = a.x - b.x;
-		this.y = a.y - b.y;
-		this.z = a.z - b.z;
+		// this.x = a.x - b.x;
+		// this.y = a.y - b.y;
+		// this.z = a.z - b.z;
+		this.vector3d = SIMD.Float32x4.sub(SIMD.Float32x4(a.x, a.y, a.z), SIMD.Float32x4(b.x, b.y, b.z));
 
 		return this;
 
@@ -172,9 +178,10 @@ THREE.Vector3.prototype = {
 
 		}
 
-		this.x *= v.x;
-		this.y *= v.y;
-		this.z *= v.z;
+		// this.x *= v.x;
+		// this.y *= v.y;
+		// this.z *= v.z;
+		this.vector3d = SIMD.Float32x4.mul(this.vector3d, SIMD.Float32x4(v.x, v.y, v.z));
 
 		return this;
 
@@ -182,9 +189,10 @@ THREE.Vector3.prototype = {
 
 	multiplyScalar: function ( scalar ) {
 
-		this.x *= scalar;
-		this.y *= scalar;
-		this.z *= scalar;
+		// this.x *= scalar;
+		// this.y *= scalar;
+		// this.z *= scalar;
+		this.vector3d = SIMD.Float32x4.mul(this.vector3d, SIMD.Float32x4(s, s, s));
 
 		return this;
 
@@ -192,9 +200,10 @@ THREE.Vector3.prototype = {
 
 	multiplyVectors: function ( a, b ) {
 
-		this.x = a.x * b.x;
-		this.y = a.y * b.y;
-		this.z = a.z * b.z;
+		// this.x = a.x * b.x;
+		// this.y = a.y * b.y;
+		// this.z = a.z * b.z;
+		this.vector3d = SIMD.Float32x4.mul(SIMD.Float32x4(a.x, a.y, a.z), SIMD.Float32x4(b.x, b.y, b.z));
 
 		return this;
 
@@ -240,15 +249,21 @@ THREE.Vector3.prototype = {
 
 	applyMatrix3: function ( m ) {
 
-		var x = this.x;
-		var y = this.y;
-		var z = this.z;
+		var x = SIMD.Float32x4.extractLane(this.vector3d, 0);
+		var y = SIMD.Float32x4.extractLane(this.vector3d, 1);
+		var z = SIMD.Float32x4.extractLane(this.vector3d, 2);
+
+		// this.vector3d = SIMD.Float32x4.replaceLane(this.vector3d, 0, bla)
+		// this.vector3d = SIMD.Float32x4.replaceLane(this.vector3d, 1, bla)
+		// this.vector3d = SIMD.Float32x4.replaceLane(this.vector3d, 2, bla)
 
 		var e = m.elements;
 
-		this.x = e[ 0 ] * x + e[ 3 ] * y + e[ 6 ] * z;
-		this.y = e[ 1 ] * x + e[ 4 ] * y + e[ 7 ] * z;
-		this.z = e[ 2 ] * x + e[ 5 ] * y + e[ 8 ] * z;
+		var newX = e[ 0 ] * x + e[ 3 ] * y + e[ 6 ] * z;
+		var newY = e[ 1 ] * x + e[ 4 ] * y + e[ 7 ] * z;
+		var newZ = e[ 2 ] * x + e[ 5 ] * y + e[ 8 ] * z;
+
+		this.vector3d = SIMD.Float32x4(newX, newY, newZ);
 
 		return this;
 
@@ -258,13 +273,17 @@ THREE.Vector3.prototype = {
 
 		// input: THREE.Matrix4 affine matrix
 
-		var x = this.x, y = this.y, z = this.z;
+		var x = SIMD.Float32x4.extractLane(this.vector3d, 0);
+		var y = SIMD.Float32x4.extractLane(this.vector3d, 1);
+		var z = SIMD.Float32x4.extractLane(this.vector3d, 2);
 
 		var e = m.elements;
 
-		this.x = e[ 0 ] * x + e[ 4 ] * y + e[ 8 ]  * z + e[ 12 ];
-		this.y = e[ 1 ] * x + e[ 5 ] * y + e[ 9 ]  * z + e[ 13 ];
-		this.z = e[ 2 ] * x + e[ 6 ] * y + e[ 10 ] * z + e[ 14 ];
+		var newX = e[ 0 ] * x + e[ 4 ] * y + e[ 8 ]  * z + e[ 12 ];
+		var newY = e[ 1 ] * x + e[ 5 ] * y + e[ 9 ]  * z + e[ 13 ];
+		var newZ = e[ 2 ] * x + e[ 6 ] * y + e[ 10 ] * z + e[ 14 ];
+
+		this.vector3d = SIMD.Float32x4(newX, newY, newZ);
 
 		return this;
 
@@ -274,14 +293,18 @@ THREE.Vector3.prototype = {
 
 		// input: THREE.Matrix4 projection matrix
 
-		var x = this.x, y = this.y, z = this.z;
+		var x = SIMD.Float32x4.extractLane(this.vector3d, 0);
+		var y = SIMD.Float32x4.extractLane(this.vector3d, 1);
+		var z = SIMD.Float32x4.extractLane(this.vector3d, 2);
 
 		var e = m.elements;
 		var d = 1 / ( e[ 3 ] * x + e[ 7 ] * y + e[ 11 ] * z + e[ 15 ] ); // perspective divide
 
-		this.x = ( e[ 0 ] * x + e[ 4 ] * y + e[ 8 ]  * z + e[ 12 ] ) * d;
-		this.y = ( e[ 1 ] * x + e[ 5 ] * y + e[ 9 ]  * z + e[ 13 ] ) * d;
-		this.z = ( e[ 2 ] * x + e[ 6 ] * y + e[ 10 ] * z + e[ 14 ] ) * d;
+		var newX = ( e[ 0 ] * x + e[ 4 ] * y + e[ 8 ]  * z + e[ 12 ] ) * d;
+		var newY = ( e[ 1 ] * x + e[ 5 ] * y + e[ 9 ]  * z + e[ 13 ] ) * d;
+		var newZ = ( e[ 2 ] * x + e[ 6 ] * y + e[ 10 ] * z + e[ 14 ] ) * d;
+
+		this.vector3d = SIMD.Float32x4(newX, newY, newZ);
 
 		return this;
 
@@ -289,9 +312,9 @@ THREE.Vector3.prototype = {
 
 	applyQuaternion: function ( q ) {
 
-		var x = this.x;
-		var y = this.y;
-		var z = this.z;
+		var x = SIMD.Float32x4.extractLane(this.vector3d, 0);
+		var y = SIMD.Float32x4.extractLane(this.vector3d, 1);
+		var z = SIMD.Float32x4.extractLane(this.vector3d, 2);
 
 		var qx = q.x;
 		var qy = q.y;
@@ -307,9 +330,11 @@ THREE.Vector3.prototype = {
 
 		// calculate result * inverse quat
 
-		this.x = ix * qw + iw * - qx + iy * - qz - iz * - qy;
-		this.y = iy * qw + iw * - qy + iz * - qx - ix * - qz;
-		this.z = iz * qw + iw * - qz + ix * - qy - iy * - qx;
+		var newX = ix * qw + iw * - qx + iy * - qz - iz * - qy;
+		var newY = iy * qw + iw * - qy + iz * - qx - ix * - qz;
+		var newZ = iz * qw + iw * - qz + ix * - qy - iy * - qx;
+
+		this.vector3d = SIMD.Float32x4(newX, newY, newZ);
 
 		return this;
 
@@ -350,13 +375,17 @@ THREE.Vector3.prototype = {
 		// input: THREE.Matrix4 affine matrix
 		// vector interpreted as a direction
 
-		var x = this.x, y = this.y, z = this.z;
+		var x = SIMD.Float32x4.extractLane(this.vector3d, 0);
+		var y = SIMD.Float32x4.extractLane(this.vector3d, 1);
+		var z = SIMD.Float32x4.extractLane(this.vector3d, 2);
 
 		var e = m.elements;
 
-		this.x = e[ 0 ] * x + e[ 4 ] * y + e[ 8 ]  * z;
-		this.y = e[ 1 ] * x + e[ 5 ] * y + e[ 9 ]  * z;
-		this.z = e[ 2 ] * x + e[ 6 ] * y + e[ 10 ] * z;
+		var newX = e[ 0 ] * x + e[ 4 ] * y + e[ 8 ]  * z;
+		var newY = e[ 1 ] * x + e[ 5 ] * y + e[ 9 ]  * z;
+		var newZ = e[ 2 ] * x + e[ 6 ] * y + e[ 10 ] * z;
+
+		this.vector3d = SIMD.Float32x4(newX, newY, newZ);
 
 		this.normalize();
 
@@ -366,9 +395,7 @@ THREE.Vector3.prototype = {
 
 	divide: function ( v ) {
 
-		this.x /= v.x;
-		this.y /= v.y;
-		this.z /= v.z;
+		this.vector3d = SIMD.Float32x4.div(this.vector3d, SIMD.Float32x4(v.x, v.y, v.z));
 
 		return this;
 
@@ -378,17 +405,11 @@ THREE.Vector3.prototype = {
 
 		if ( scalar !== 0 ) {
 
-			var invScalar = 1 / scalar;
-
-			this.x *= invScalar;
-			this.y *= invScalar;
-			this.z *= invScalar;
+			this.vector3d = SIMD.Float32x4.div(this.vector3d, SIMD.Float32x4(scalar, scalar, scalar));
 
 		} else {
 
-			this.x = 0;
-			this.y = 0;
-			this.z = 0;
+			this.vector3d = SIMD.Float32x4(0, 0, 0);
 
 		}
 
@@ -398,23 +419,26 @@ THREE.Vector3.prototype = {
 
 	min: function ( v ) {
 
-		if ( this.x > v.x ) {
+		v = SIMD.Float32x4(v.x, v.y, v.z);
+		this.vector3d = SIMD.Float32x4.minNum(this.vector3d, v);
 
-			this.x = v.x;
-
-		}
-
-		if ( this.y > v.y ) {
-
-			this.y = v.y;
-
-		}
-
-		if ( this.z > v.z ) {
-
-			this.z = v.z;
-
-		}
+		// if ( this.x > v.x ) {
+		//
+		// 	this.x = v.x;
+		//
+		// }
+		//
+		// if ( this.y > v.y ) {
+		//
+		// 	this.y = v.y;
+		//
+		// }
+		//
+		// if ( this.z > v.z ) {
+		//
+		// 	this.z = v.z;
+		//
+		// }
 
 		return this;
 
@@ -422,23 +446,26 @@ THREE.Vector3.prototype = {
 
 	max: function ( v ) {
 
-		if ( this.x < v.x ) {
+		v = SIMD.Float32x4(v.x, v.y, v.z);
+		this.vector3d = SIMD.Float32x4.maxNum(this.vector3d, v);
 
-			this.x = v.x;
-
-		}
-
-		if ( this.y < v.y ) {
-
-			this.y = v.y;
-
-		}
-
-		if ( this.z < v.z ) {
-
-			this.z = v.z;
-
-		}
+		// if ( this.x < v.x ) {
+		//
+		// 	this.x = v.x;
+		//
+		// }
+		//
+		// if ( this.y < v.y ) {
+		//
+		// 	this.y = v.y;
+		//
+		// }
+		//
+		// if ( this.z < v.z ) {
+		//
+		// 	this.z = v.z;
+		//
+		// }
 
 		return this;
 
@@ -448,35 +475,41 @@ THREE.Vector3.prototype = {
 
 		// This function assumes min < max, if this assumption isn't true it will not operate correctly
 
-		if ( this.x < min.x ) {
+		var v_max = SIMD.Float32x4(max.x, max.y, max.z);
+		this.vector3d = SIMD.Float32x4.maxNum(this.vector3d, v_max);
 
-			this.x = min.x;
+		var v_min = SIMD.Float32x4(min.x, min.y, min.z);
+		this.vector3d = SIMD.Float32x4.minNum(this.vector3d, v_min);
 
-		} else if ( this.x > max.x ) {
-
-			this.x = max.x;
-
-		}
-
-		if ( this.y < min.y ) {
-
-			this.y = min.y;
-
-		} else if ( this.y > max.y ) {
-
-			this.y = max.y;
-
-		}
-
-		if ( this.z < min.z ) {
-
-			this.z = min.z;
-
-		} else if ( this.z > max.z ) {
-
-			this.z = max.z;
-
-		}
+		// if ( this.x < min.x ) {
+		//
+		// 	this.x = min.x;
+		//
+		// } else if ( this.x > max.x ) {
+		//
+		// 	this.x = max.x;
+		//
+		// }
+		//
+		// if ( this.y < min.y ) {
+		//
+		// 	this.y = min.y;
+		//
+		// } else if ( this.y > max.y ) {
+		//
+		// 	this.y = max.y;
+		//
+		// }
+		//
+		// if ( this.z < min.z ) {
+		//
+		// 	this.z = min.z;
+		//
+		// } else if ( this.z > max.z ) {
+		//
+		// 	this.z = max.z;
+		//
+		// }
 
 		return this;
 
@@ -562,19 +595,27 @@ THREE.Vector3.prototype = {
 
 	lengthSq: function () {
 
-		return this.x * this.x + this.y * this.y + this.z * this.z;
+		// return this.x * this.x + this.y * this.y + this.z * this.z;
+		// square each value then sum it up
+		var squaredVector = SIMD.Int32x4.shiftLeftByScalar(this.vector3d, 1);
+
+		var extract = SIMD.Int32x4.extractLane;
+
+		return extract(this.vector3d, 0) + extract(this.vector3d, 1) + extract(this.vector3d, 2);
 
 	},
 
 	length: function () {
 
-		return Math.sqrt( this.x * this.x + this.y * this.y + this.z * this.z );
+		// return Math.sqrt( this.x * this.x + this.y * this.y + this.z * this.z );
+		return Math.sqrt(this.lengthSq());
 
 	},
 
 	lengthManhattan: function () {
-
-		return Math.abs( this.x ) + Math.abs( this.y ) + Math.abs( this.z );
+		var extract = SIMD.Int32x4.extractLane;
+		var v3 = this.vector3d
+		return Math.abs( extract(v3, 0) ) + Math.abs( extract(v3, 1) ) + Math.abs( extract(v3, 2) );
 
 	},
 
@@ -783,7 +824,7 @@ THREE.Vector3.prototype = {
 	},
 
 	setFromMatrixColumn: function ( index, matrix ) {
-		
+
 		var offset = index * 4;
 
 		var me = matrix.elements;
