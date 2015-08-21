@@ -1720,7 +1720,13 @@ THREE.Vector3.prototype = {
     // this.x = v.x;
     // this.y = v.y;
     // this.z = v.z;
-    this.vector3d = window.SIMD.Float32x4(v.x, v.y, v.z);
+    // this.vector3d = window.SIMD.Float32x4(v.x, v.y, v.z);
+		// assume v is a window.SIMD.Float32x4 vector
+    // if (typeof v.x !== 'undefined') {
+    //   console.log('SOMETHING WILL GO WRONG IN COPY FUNCTION!');
+    // }
+
+    this.vector3d = v.vector3d;
 
     return this;
 
@@ -1738,7 +1744,10 @@ THREE.Vector3.prototype = {
     // this.x += v.x;
     // this.y += v.y;
     // this.z += v.z;
-    this.vector3d = window.SIMD.Float32x4.add(this.vector3d, window.SIMD.Float32x4(v.x, v.y, v.z));
+    // if (typeof v.x !== 'undefined') {
+    //   console.log('SOMETHING WILL GO WRONG IN ADD FUNCTION!');
+    // }
+    this.vector3d = window.SIMD.Float32x4.add(this.vector3d, v.vector3d);
 
     return this;
 
@@ -1760,7 +1769,10 @@ THREE.Vector3.prototype = {
     // this.x = a.x + b.x;
     // this.y = a.y + b.y;
     // this.z = a.z + b.z;
-    this.vector3d = window.SIMD.Float32x4.add(window.SIMD.Float32x4(a.x, a.y, a.z), window.SIMD.Float32x4(b.x, b.y, b.z));
+    // if (typeof a.x !== 'undefined' || typeof b.x !== 'undefined') {
+    //   console.log('SOMETHING WILL GO WRONG IN ADDVECTORS FUNCTION!');
+    // }
+    this.vector3d = window.SIMD.Float32x4.add(a.vector3d, b.vector3d);
 
     return this;
 
@@ -1778,7 +1790,10 @@ THREE.Vector3.prototype = {
     // this.x -= v.x;
     // this.y -= v.y;
     // this.z -= v.z;
-    this.vector3d = window.SIMD.Float32x4.sub(this.vector3d, window.SIMD.Float32x4(v.x, v.y, v.z));
+    // if (typeof v.x !== 'undefined') {
+    //   console.log('SOMETHING WILL GO WRONG IN SUB FUNCTION!');
+    // }
+    this.vector3d = window.SIMD.Float32x4.sub(this.vector3d, v.vector3d);
 
     return this;
 
@@ -1800,7 +1815,13 @@ THREE.Vector3.prototype = {
     // this.x = a.x - b.x;
     // this.y = a.y - b.y;
     // this.z = a.z - b.z;
-    this.vector3d = window.SIMD.Float32x4.sub(window.SIMD.Float32x4(a.x, a.y, a.z), window.SIMD.Float32x4(b.x, b.y, b.z));
+    // if (typeof a.x !== 'undefined' || typeof b.x !== 'undefined') {
+    //   console.log('SOMETHING WILL GO WRONG IN subVECTORS FUNCTION!');
+    //   console.log(a);
+    //   console.log(b);
+    //   throw new Error('check it out you!')
+    // }
+    this.vector3d = window.SIMD.Float32x4.sub(a.vector3d, b.vector3d);
 
     return this;
 
@@ -1818,7 +1839,10 @@ THREE.Vector3.prototype = {
     // this.x *= v.x;
     // this.y *= v.y;
     // this.z *= v.z;
-    this.vector3d = window.SIMD.Float32x4.mul(this.vector3d, window.SIMD.Float32x4(v.x, v.y, v.z));
+    // if (typeof v.x !== 'undefined') {
+    //   console.log('SOMETHING WILL GO WRONG IN multiply FUNCTION!');
+    // }
+    this.vector3d = window.SIMD.Float32x4.mul(this.vector3d, v.vector3d);
 
     return this;
 
@@ -1840,7 +1864,10 @@ THREE.Vector3.prototype = {
     // this.x = a.x * b.x;
     // this.y = a.y * b.y;
     // this.z = a.z * b.z;
-    this.vector3d = window.SIMD.Float32x4.mul(window.SIMD.Float32x4(a.x, a.y, a.z), window.SIMD.Float32x4(b.x, b.y, b.z));
+    // if (typeof a.x !== 'undefined' || typeof b.x !== 'undefined') {
+    //   console.log('SOMETHING WILL GO WRONG IN multiplyVectors FUNCTION!');
+    // }
+    this.vector3d = window.SIMD.Float32x4.mul(a.vector3d, b.vector3d);
 
     return this;
 
@@ -1896,6 +1923,10 @@ THREE.Vector3.prototype = {
 
     var e = m.elements;
 
+		if (typeof e === 'undefined') {
+			console.log('ERROR IN applyMatrix3');
+		}
+
     var newX = e[0] * x + e[3] * y + e[6] * z;
     var newY = e[1] * x + e[4] * y + e[7] * z;
     var newZ = e[2] * x + e[5] * y + e[8] * z;
@@ -1915,6 +1946,11 @@ THREE.Vector3.prototype = {
     var z = window.SIMD.Float32x4.extractLane(this.vector3d, 2);
 
     var e = m.elements;
+
+		if (typeof e === 'undefined') {
+			console.log('ERROR IN applyMatrix4');
+		}
+
 
     var newX = e[0] * x + e[4] * y + e[8] * z + e[12];
     var newY = e[1] * x + e[5] * y + e[9] * z + e[13];
@@ -2032,7 +2068,7 @@ THREE.Vector3.prototype = {
 
   divide: function(v) {
 
-    this.vector3d = window.SIMD.Float32x4.div(this.vector3d, window.SIMD.Float32x4(v.x, v.y, v.z));
+    this.vector3d = window.SIMD.Float32x4.div(this.vector3d, v.vector3d);
 
     return this;
 
@@ -2056,8 +2092,8 @@ THREE.Vector3.prototype = {
 
   min: function(v) {
 
-    v = window.SIMD.Float32x4(v.x, v.y, v.z);
-    this.vector3d = window.SIMD.Float32x4.minNum(this.vector3d, v);
+    // v = window.SIMD.Floa t32x4(v.x, v.y, v.z);
+    this.vector3d = window.SIMD.Float32x4.minNum(this.vector3d, v.vector3d);
 
     // if ( this.x > v.x ) {
     //
@@ -2083,8 +2119,8 @@ THREE.Vector3.prototype = {
 
   max: function(v) {
 
-    v = window.SIMD.Float32x4(v.x, v.y, v.z);
-    this.vector3d = window.SIMD.Float32x4.maxNum(this.vector3d, v);
+    // v = window.SIMD.Float32x4(v.x, v.y, v.z);
+    this.vector3d = window.SIMD.Float32x4.maxNum(this.vector3d, v.vector3d);
 
     // if ( this.x < v.x ) {
     //
@@ -2112,11 +2148,11 @@ THREE.Vector3.prototype = {
 
     // This function assumes min < max, if this assumption isn't true it will not operate correctly
 
-    var v_max = window.SIMD.Float32x4(max.x, max.y, max.z);
-    this.vector3d = window.SIMD.Float32x4.maxNum(this.vector3d, v_max);
+    // var v_max = window.SIMD.Float32x4(max.x, max.y, max.z);
+    this.vector3d = window.SIMD.Float32x4.maxNum(this.vector3d, max.vector3d);
 
-    var v_min = window.SIMD.Float32x4(min.x, min.y, min.z);
-    this.vector3d = window.SIMD.Float32x4.minNum(this.vector3d, v_min);
+    // var v_min = window.SIMD.Float32x4(min.x, min.y, min.z);
+    this.vector3d = window.SIMD.Float32x4.minNum(this.vector3d, min.vector3d);
 
     // if ( this.x < min.x ) {
     //
@@ -2236,7 +2272,7 @@ THREE.Vector3.prototype = {
 
   dot: function(v) {
 
-    var v3 = window.SIMD.Float32x4.mul(this.vector3d, window.SIMD.Float32x4(v.x, v.y, v.z));
+    var v3 = window.SIMD.Float32x4.mul(this.vector3d, v);
     var sum = window.SIMD.Float32x4.extractLane(v3, 0) +
 			window.SIMD.Float32x4.extractLane(v3, 1) +
 			window.SIMD.Float32x4.extractLane(v3, 2);
@@ -2296,9 +2332,9 @@ THREE.Vector3.prototype = {
     // this.y += ( v.y - this.y ) * alpha;
     // this.z += ( v.z - this.z ) * alpha;
     var v_alpha = window.SIMD.Float32x4(alpha, alpha, alpha);
-    v = window.SIMD.Float32x4(v.x, v.y, v.z);
+    // v = window.SIMD.Float32x4(v.x, v.y, v.z);
     this.vector3d = window.SIMD.Float32x4.mul(
-      window.SIMD.Float32x4.sub(v, this.vector3d),
+      window.SIMD.Float32x4.sub(v.vector3d, this.vector3d),
       v_alpha
     );
 
@@ -2308,7 +2344,7 @@ THREE.Vector3.prototype = {
 
   lerpVectors: function(v1, v2, alpha) {
 
-    this.subVectors(v2, v1).multiplyScalar(alpha).add(v1);
+    this.subVectors(v2.vector3d, v1.vector3d).multiplyScalar(alpha).add(v1.vector3d);
 
     return this;
 
@@ -2324,15 +2360,26 @@ THREE.Vector3.prototype = {
     }
 
     // var x = this.x, y = this.y, z = this.z;
-    var x = window.SIMD.Float32x4.extractLane(this.vector3d, 0);
-    var y = window.SIMD.Float32x4.extractLane(this.vector3d, 1);
-    var z = window.SIMD.Float32x4.extractLane(this.vector3d, 2);
+    // var x = window.SIMD.Float32x4.extractLane(this.vector3d, 0);
+    // var y = window.SIMD.Float32x4.extractLane(this.vector3d, 1);
+    // var z = window.SIMD.Float32x4.extractLane(this.vector3d, 2);
 
-    var newX = y * v.z - z * v.y;
-    var newY = z * v.x - x * v.z;
-    var newZ = x * v.y - y * v.x;
+    // var newX = y * v.z - z * v.y;
+    // var newY = z * v.x - x * v.z;
+    // var newZ = x * v.y - y * v.x;
 
-    this.vector3d = window.SIMD.Float32x4(newX, newY, newZ);
+    this.vector3d = window.SIMD.Float32x4.sub(
+			window.SIMD.Float32x4.mul(
+        window.SIMD.Float32x4.swizzle(this.vector3d, 1, 2, 0, 3),
+        window.SIMD.Float32x4.swizzle(v.vector3d, 2, 0, 1, 3)
+      ),
+			window.SIMD.Float32x4.mul(
+        window.SIMD.Float32x4.swizzle(this.vector3d, 2, 0, 1, 3),
+        window.SIMD.Float32x4.swizzle(v.vector3d, 1, 2, 0, 3)
+      )
+		);
+
+    // this.vector3d = window.SIMD.Float32x4(newX, newY, newZ);
 
     return this;
 
@@ -2340,18 +2387,29 @@ THREE.Vector3.prototype = {
 
   crossVectors: function(a, b) {
 
-    var ax = a.x,
-      ay = a.y,
-      az = a.z;
-    var bx = b.x,
-      by = b.y,
-      bz = b.z;
+    // var ax = a.x,
+    //   ay = a.y,
+    //   az = a.z;
+    // var bx = b.x,
+    //   by = b.y,
+    //   bz = b.z;
+    //
+    // var newX = ay * bz - az * by;
+    // var newY = az * bx - ax * bz;
+    // var newZ = ax * by - ay * bx;
+    //
+    // this.vector3d = window.SIMD.Float32x4(newX, newY, newZ);
 
-    var newX = ay * bz - az * by;
-    var newY = az * bx - ax * bz;
-    var newZ = ax * by - ay * bx;
-
-    this.vector3d = window.SIMD.Float32x4(newX, newY, newZ);
+    this.vector3d = window.SIMD.Float32x4.sub(
+			window.SIMD.Float32x4.mul(
+        window.SIMD.Float32x4.swizzle(a.vector3d, 1, 2, 0, 3),
+        window.SIMD.Float32x4.swizzle(b.vector3d, 2, 0, 1, 3)
+      ),
+			window.SIMD.Float32x4.mul(
+        window.SIMD.Float32x4.swizzle(a.vector3d, 2, 0, 1, 3),
+        window.SIMD.Float32x4.swizzle(b.vector3d, 1, 2, 0, 3)
+      )
+		);
 
     return this;
 
@@ -2429,7 +2487,7 @@ THREE.Vector3.prototype = {
     // var dx = this.x - v.x;
     // var dy = this.y - v.y;
     // var dz = this.z - v.z;
-    var vector3d = window.SIMD.Float32x4.sub(this.vector3d, window.SIMD.Float32x4(v.x, v.y, v.z));
+    var vector3d = window.SIMD.Float32x4.sub(this.vector3d, v.vector3d);
     vector3d = window.SIMD.Float32x4.mul(vector3d, vector3d);
     var sum = window.SIMD.Float32x4.extractLane(vector3d, 0) +
       window.SIMD.Float32x4.extractLane(vector3d, 1) +
@@ -32695,285 +32753,285 @@ THREE.TorusKnotGeometry.prototype.constructor = THREE.TorusKnotGeometry;
  * http://www.cs.indiana.edu/pub/techreports/TR425.pdf
  */
 
-THREE.TubeGeometry = function ( path, segments, radius, radialSegments, closed, taper ) {
+THREE.TubeGeometry = function(path, segments, radius, radialSegments, closed, taper) {
 
-	THREE.Geometry.call( this );
+  THREE.Geometry.call(this);
 
-	this.type = 'TubeGeometry';
+  this.type = 'TubeGeometry';
 
-	this.parameters = {
-		path: path,
-		segments: segments,
-		radius: radius,
-		radialSegments: radialSegments,
-		closed: closed
-	};
+  this.parameters = {
+    path: path,
+    segments: segments,
+    radius: radius,
+    radialSegments: radialSegments,
+    closed: closed
+  };
 
-	segments = segments || 64;
-	radius = radius || 1;
-	radialSegments = radialSegments || 8;
-	closed = closed || false;
-	taper = taper || THREE.TubeGeometry.NoTaper;
+  segments = segments || 64;
+  radius = radius || 1;
+  radialSegments = radialSegments || 8;
+  closed = closed || false;
+  taper = taper || THREE.TubeGeometry.NoTaper;
 
-	var grid = [];
+  var grid = [];
 
-	var scope = this,
+  var scope = this,
 
-		tangent,
-		normal,
-		binormal,
+    tangent,
+    normal,
+    binormal,
 
-		numpoints = segments + 1,
+    numpoints = segments + 1,
 
-		u, v, r,
+    u, v, r,
 
-		cx, cy,
-		pos, pos2 = new THREE.Vector3(),
-		i, j,
-		ip, jp,
-		a, b, c, d,
-		uva, uvb, uvc, uvd;
+    cx, cy,
+    pos, pos2 = new THREE.Vector3(),
+    i, j,
+    ip, jp,
+    a, b, c, d,
+    uva, uvb, uvc, uvd;
 
-	var frames = new THREE.TubeGeometry.FrenetFrames( path, segments, closed ),
-		tangents = frames.tangents,
-		normals = frames.normals,
-		binormals = frames.binormals;
+  var frames = new THREE.TubeGeometry.FrenetFrames(path, segments, closed),
+    tangents = frames.tangents,
+    normals = frames.normals,
+    binormals = frames.binormals;
 
-	// proxy internals
-	this.tangents = tangents;
-	this.normals = normals;
-	this.binormals = binormals;
+  // proxy internals
+  this.tangents = tangents;
+  this.normals = normals;
+  this.binormals = binormals;
 
-	function vert( x, y, z ) {
+  function vert(x, y, z) {
 
-		return scope.vertices.push( new THREE.Vector3( x, y, z ) ) - 1;
+    return scope.vertices.push(new THREE.Vector3(x, y, z)) - 1;
 
-	}
+  }
 
-	// consruct the grid
+  // consruct the grid
 
-	for ( i = 0; i < numpoints; i ++ ) {
+  for (i = 0; i < numpoints; i++) {
 
-		grid[ i ] = [];
+    grid[i] = [];
 
-		u = i / ( numpoints - 1 );
+    u = i / (numpoints - 1);
 
-		pos = path.getPointAt( u );
+    pos = path.getPointAt(u);
 
-		tangent = tangents[ i ];
-		normal = normals[ i ];
-		binormal = binormals[ i ];
+    tangent = tangents[i];
+    normal = normals[i];
+    binormal = binormals[i];
 
-		r = radius * taper( u );
+    r = radius * taper(u);
 
-		for ( j = 0; j < radialSegments; j ++ ) {
+    for (j = 0; j < radialSegments; j++) {
 
-			v = j / radialSegments * 2 * Math.PI;
+      v = j / radialSegments * 2 * Math.PI;
 
-			cx = - r * Math.cos( v ); // TODO: Hack: Negating it so it faces outside.
-			cy = r * Math.sin( v );
+      cx = -r * Math.cos(v); // TODO: Hack: Negating it so it faces outside.
+      cy = r * Math.sin(v);
 
-			pos2.copy( pos );
-			pos2.x += cx * normal.x + cy * binormal.x;
-			pos2.y += cx * normal.y + cy * binormal.y;
-			pos2.z += cx * normal.z + cy * binormal.z;
+      pos2.copy(pos);
+      pos2.x += cx * normal.x + cy * binormal.x;
+      pos2.y += cx * normal.y + cy * binormal.y;
+      pos2.z += cx * normal.z + cy * binormal.z;
 
-			grid[ i ][ j ] = vert( pos2.x, pos2.y, pos2.z );
+      grid[i][j] = vert(pos2.x, pos2.y, pos2.z);
 
-		}
-	}
+    }
+  }
 
 
-	// construct the mesh
+  // construct the mesh
 
-	for ( i = 0; i < segments; i ++ ) {
+  for (i = 0; i < segments; i++) {
 
-		for ( j = 0; j < radialSegments; j ++ ) {
+    for (j = 0; j < radialSegments; j++) {
 
-			ip = ( closed ) ? (i + 1) % segments : i + 1;
-			jp = (j + 1) % radialSegments;
+      ip = (closed) ? (i + 1) % segments : i + 1;
+      jp = (j + 1) % radialSegments;
 
-			a = grid[ i ][ j ];		// *** NOT NECESSARILY PLANAR ! ***
-			b = grid[ ip ][ j ];
-			c = grid[ ip ][ jp ];
-			d = grid[ i ][ jp ];
+      a = grid[i][j]; // *** NOT NECESSARILY PLANAR ! ***
+      b = grid[ip][j];
+      c = grid[ip][jp];
+      d = grid[i][jp];
 
-			uva = new THREE.Vector2( i / segments, j / radialSegments );
-			uvb = new THREE.Vector2( ( i + 1 ) / segments, j / radialSegments );
-			uvc = new THREE.Vector2( ( i + 1 ) / segments, ( j + 1 ) / radialSegments );
-			uvd = new THREE.Vector2( i / segments, ( j + 1 ) / radialSegments );
+      uva = new THREE.Vector2(i / segments, j / radialSegments);
+      uvb = new THREE.Vector2((i + 1) / segments, j / radialSegments);
+      uvc = new THREE.Vector2((i + 1) / segments, (j + 1) / radialSegments);
+      uvd = new THREE.Vector2(i / segments, (j + 1) / radialSegments);
 
-			this.faces.push( new THREE.Face3( a, b, d ) );
-			this.faceVertexUvs[ 0 ].push( [ uva, uvb, uvd ] );
+      this.faces.push(new THREE.Face3(a, b, d));
+      this.faceVertexUvs[0].push([uva, uvb, uvd]);
 
-			this.faces.push( new THREE.Face3( b, c, d ) );
-			this.faceVertexUvs[ 0 ].push( [ uvb.clone(), uvc, uvd.clone() ] );
+      this.faces.push(new THREE.Face3(b, c, d));
+      this.faceVertexUvs[0].push([uvb.clone(), uvc, uvd.clone()]);
 
-		}
-	}
+    }
+  }
 
-	this.computeFaceNormals();
-	this.computeVertexNormals();
+  this.computeFaceNormals();
+  this.computeVertexNormals();
 
 };
 
-THREE.TubeGeometry.prototype = Object.create( THREE.Geometry.prototype );
+THREE.TubeGeometry.prototype = Object.create(THREE.Geometry.prototype);
 THREE.TubeGeometry.prototype.constructor = THREE.TubeGeometry;
 
-THREE.TubeGeometry.NoTaper = function ( u ) {
+THREE.TubeGeometry.NoTaper = function(u) {
 
-	return 1;
+  return 1;
 
 };
 
-THREE.TubeGeometry.SinusoidalTaper = function ( u ) {
+THREE.TubeGeometry.SinusoidalTaper = function(u) {
 
-	return Math.sin( Math.PI * u );
+  return Math.sin(Math.PI * u);
 
 };
 
 // For computing of Frenet frames, exposing the tangents, normals and binormals the spline
-THREE.TubeGeometry.FrenetFrames = function ( path, segments, closed ) {
+THREE.TubeGeometry.FrenetFrames = function(path, segments, closed) {
 
-	var	normal = new THREE.Vector3(),
+  var normal = new THREE.Vector3(),
 
-		tangents = [],
-		normals = [],
-		binormals = [],
+    tangents = [],
+    normals = [],
+    binormals = [],
 
-		vec = new THREE.Vector3(),
-		mat = new THREE.Matrix4(),
+    vec = new THREE.Vector3(),
+    mat = new THREE.Matrix4(),
 
-		numpoints = segments + 1,
-		theta,
-		epsilon = 0.0001,
-		smallest,
+    numpoints = segments + 1,
+    theta,
+    epsilon = 0.0001,
+    smallest,
 
-		tx, ty, tz,
-		i, u;
+    tx, ty, tz,
+    i, u;
 
 
-	// expose internals
-	this.tangents = tangents;
-	this.normals = normals;
-	this.binormals = binormals;
+  // expose internals
+  this.tangents = tangents;
+  this.normals = normals;
+  this.binormals = binormals;
 
-	// compute the tangent vectors for each segment on the path
+  // compute the tangent vectors for each segment on the path
 
-	for ( i = 0; i < numpoints; i ++ ) {
+  for (i = 0; i < numpoints; i++) {
 
-		u = i / ( numpoints - 1 );
+    u = i / (numpoints - 1);
 
-		tangents[ i ] = path.getTangentAt( u );
-		tangents[ i ].normalize();
+    tangents[i] = path.getTangentAt(u);
+    tangents[i].normalize();
 
-	}
+  }
 
-	initialNormal3();
+  initialNormal3();
 
-	/*
-	function initialNormal1(lastBinormal) {
-		// fixed start binormal. Has dangers of 0 vectors
-		normals[ 0 ] = new THREE.Vector3();
+  /*
+  function initialNormal1(lastBinormal) {
+    // fixed start binormal. Has dangers of 0 vectors
+    normals[ 0 ] = new THREE.Vector3();
 		binormals[ 0 ] = new THREE.Vector3();
 		if (lastBinormal===undefined) lastBinormal = new THREE.Vector3( 0, 0, 1 );
 		normals[ 0 ].crossVectors( lastBinormal, tangents[ 0 ] ).normalize();
 		binormals[ 0 ].crossVectors( tangents[ 0 ], normals[ 0 ] ).normalize();
-	}
+  }
 
-	function initialNormal2() {
+  function initialNormal2() {
 
 		// This uses the Frenet-Serret formula for deriving binormal
-		var t2 = path.getTangentAt( epsilon );
+    var t2 = path.getTangentAt( epsilon );
 
-		normals[ 0 ] = new THREE.Vector3().subVectors( t2, tangents[ 0 ] ).normalize();
-		binormals[ 0 ] = new THREE.Vector3().crossVectors( tangents[ 0 ], normals[ 0 ] );
+    normals[ 0 ] = new THREE.Vector3().subVectors( t2, tangents[ 0 ] ).normalize();
+    binormals[ 0 ] = new THREE.Vector3().crossVectors( tangents[ 0 ], normals[ 0 ] );
 
-		normals[ 0 ].crossVectors( binormals[ 0 ], tangents[ 0 ] ).normalize(); // last binormal x tangent
-		binormals[ 0 ].crossVectors( tangents[ 0 ], normals[ 0 ] ).normalize();
+    normals[ 0 ].crossVectors( binormals[ 0 ], tangents[ 0 ] ).normalize(); // last binormal x tangent
+    binormals[ 0 ].crossVectors( tangents[ 0 ], normals[ 0 ] ).normalize();
 
-	}
-	*/
+  }
+  */
 
-	function initialNormal3() {
-		// select an initial normal vector perpenicular to the first tangent vector,
-		// and in the direction of the smallest tangent xyz component
+  function initialNormal3() {
+    // select an initial normal vector perpenicular to the first tangent vector,
+    // and in the direction of the smallest tangent xyz component
 
-		normals[ 0 ] = new THREE.Vector3();
-		binormals[ 0 ] = new THREE.Vector3();
-		smallest = Number.MAX_VALUE;
-		tx = Math.abs( tangents[ 0 ].x );
-		ty = Math.abs( tangents[ 0 ].y );
-		tz = Math.abs( tangents[ 0 ].z );
+    normals[0] = new THREE.Vector3();
+    binormals[0] = new THREE.Vector3();
+    smallest = Number.MAX_VALUE;
+    tx = Math.abs(tangents[0].x);
+    ty = Math.abs(tangents[0].y);
+    tz = Math.abs(tangents[0].z);
 
-		if ( tx <= smallest ) {
-			smallest = tx;
-			normal.set( 1, 0, 0 );
-		}
+    if (tx <= smallest) {
+      smallest = tx;
+      normal.set(1, 0, 0);
+    }
 
-		if ( ty <= smallest ) {
-			smallest = ty;
-			normal.set( 0, 1, 0 );
-		}
+    if (ty <= smallest) {
+      smallest = ty;
+      normal.set(0, 1, 0);
+    }
 
-		if ( tz <= smallest ) {
-			normal.set( 0, 0, 1 );
-		}
+    if (tz <= smallest) {
+      normal.set(0, 0, 1);
+    }
 
-		vec.crossVectors( tangents[ 0 ], normal ).normalize();
+    vec.crossVectors(tangents[0], normal).normalize();
 
-		normals[ 0 ].crossVectors( tangents[ 0 ], vec );
-		binormals[ 0 ].crossVectors( tangents[ 0 ], normals[ 0 ] );
-	}
-
-
-	// compute the slowly-varying normal and binormal vectors for each segment on the path
-
-	for ( i = 1; i < numpoints; i ++ ) {
-
-		normals[ i ] = normals[ i - 1 ].clone();
-
-		binormals[ i ] = binormals[ i - 1 ].clone();
-
-		vec.crossVectors( tangents[ i - 1 ], tangents[ i ] );
-
-		if ( vec.length() > epsilon ) {
-
-			vec.normalize();
-
-			theta = Math.acos( THREE.Math.clamp( tangents[ i - 1 ].dot( tangents[ i ] ), - 1, 1 ) ); // clamp for floating pt errors
-
-			normals[ i ].applyMatrix4( mat.makeRotationAxis( vec, theta ) );
-
-		}
-
-		binormals[ i ].crossVectors( tangents[ i ], normals[ i ] );
-
-	}
+    normals[0].crossVectors(tangents[0], vec);
+    binormals[0].crossVectors(tangents[0], normals[0]);
+  }
 
 
-	// if the curve is closed, postprocess the vectors so the first and last normal vectors are the same
+  // compute the slowly-varying normal and binormal vectors for each segment on the path
 
-	if ( closed ) {
+  for (i = 1; i < numpoints; i++) {
 
-		theta = Math.acos( THREE.Math.clamp( normals[ 0 ].dot( normals[ numpoints - 1 ] ), - 1, 1 ) );
-		theta /= ( numpoints - 1 );
+    normals[i] = normals[i - 1].clone();
 
-		if ( tangents[ 0 ].dot( vec.crossVectors( normals[ 0 ], normals[ numpoints - 1 ] ) ) > 0 ) {
+    binormals[i] = binormals[i - 1].clone();
 
-			theta = - theta;
+    vec.crossVectors(tangents[i - 1], tangents[i]);
 
-		}
+    if (vec.length() > epsilon) {
 
-		for ( i = 1; i < numpoints; i ++ ) {
+      vec.normalize();
 
-			// twist a little...
-			normals[ i ].applyMatrix4( mat.makeRotationAxis( tangents[ i ], theta * i ) );
-			binormals[ i ].crossVectors( tangents[ i ], normals[ i ] );
+      theta = Math.acos(THREE.Math.clamp(tangents[i - 1].dot(tangents[i]), -1, 1)); // clamp for floating pt errors
 
-		}
+      normals[i].applyMatrix4(mat.makeRotationAxis(vec, theta));
 
-	}
+    }
+
+    binormals[i].crossVectors(tangents[i], normals[i]);
+
+  }
+
+
+  // if the curve is closed, postprocess the vectors so the first and last normal vectors are the same
+
+  if (closed) {
+
+    theta = Math.acos(THREE.Math.clamp(normals[0].dot(normals[numpoints - 1]), -1, 1));
+    theta /= (numpoints - 1);
+
+    if (tangents[0].dot(vec.crossVectors(normals[0], normals[numpoints - 1])) > 0) {
+
+      theta = -theta;
+
+    }
+
+    for (i = 1; i < numpoints; i++) {
+
+      // twist a little...
+      normals[i].applyMatrix4(mat.makeRotationAxis(tangents[i], theta * i));
+      binormals[i].crossVectors(tangents[i], normals[i]);
+
+    }
+
+  }
 };
 
 // File:src/extras/geometries/PolyhedronGeometry.js
