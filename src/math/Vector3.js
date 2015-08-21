@@ -1,4 +1,4 @@
-/*global THREE SIMD*/
+/*global THREE*/
 
 /**
  * @author mrdoob / http://mrdoob.com/
@@ -8,6 +8,12 @@
  * @author egraether / http://egraether.com/
  * @author WestLangley / http://github.com/WestLangley
  */
+
+if (typeof SIMD === 'undefined') {
+  var SIMD = {
+    Float32x4: function() {}
+  };
+}
 
 THREE.Vector3 = function(x, y, z) {
 
@@ -599,9 +605,9 @@ THREE.Vector3.prototype = {
 
     // return this.x * this.x + this.y * this.y + this.z * this.z;
     // square each value then sum it up
-    var squaredVector = SIMD.Int32x4.shiftLeftByScalar(this.vector3d, 1);
+    var squaredVector = SIMD.Float32x4.shiftLeftByScalar(this.vector3d, 1);
 
-    var extract = SIMD.Int32x4.extractLane;
+    var extract = SIMD.Float32x4.extractLane;
 
     return extract(squaredVector, 0) + extract(squaredVector, 1) + extract(squaredVector, 2);
 
@@ -615,7 +621,7 @@ THREE.Vector3.prototype = {
   },
 
   lengthManhattan: function() {
-    var extract = SIMD.Int32x4.extractLane;
+    var extract = SIMD.Float32x4.extractLane;
     var v3 = this.vector3d;
     return Math.abs(extract(v3, 0)) + Math.abs(extract(v3, 1)) + Math.abs(extract(v3, 2));
 
