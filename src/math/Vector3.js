@@ -647,7 +647,7 @@ THREE.Vector3.prototype = {
 
   dot: function(v) {
 
-    var v3 = window.SIMD.Float32x4.mul(this.vector3d, v);
+    var v3 = window.SIMD.Float32x4.mul(this.vector3d, v.vector3d);
     var sum = window.SIMD.Float32x4.extractLane(v3, 0) +
 			window.SIMD.Float32x4.extractLane(v3, 1) +
 			window.SIMD.Float32x4.extractLane(v3, 2);
@@ -719,7 +719,7 @@ THREE.Vector3.prototype = {
 
   lerpVectors: function(v1, v2, alpha) {
 
-    this.subVectors(v2.vector3d, v1.vector3d).multiplyScalar(alpha).add(v1.vector3d);
+    this.subVectors(v2, v1).multiplyScalar(alpha).add(v1);
 
     return this;
 
@@ -862,11 +862,11 @@ THREE.Vector3.prototype = {
     // var dx = this.x - v.x;
     // var dy = this.y - v.y;
     // var dz = this.z - v.z;
-    var vector3d = window.SIMD.Float32x4.sub(this.vector3d, v.vector3d);
-    vector3d = window.SIMD.Float32x4.mul(vector3d, vector3d);
-    var sum = window.SIMD.Float32x4.extractLane(vector3d, 0) +
-      window.SIMD.Float32x4.extractLane(vector3d, 1) +
-      window.SIMD.Float32x4.extractLane(vector3d, 2);
+    var localVector = window.SIMD.Float32x4.sub(this.vector3d, v.vector3d);
+    localVector = window.SIMD.Float32x4.mul(localVector, localVector);
+    var sum = window.SIMD.Float32x4.extractLane(localVector, 0) +
+      window.SIMD.Float32x4.extractLane(localVector, 1) +
+      window.SIMD.Float32x4.extractLane(localVector, 2);
 
     return sum;
 
@@ -950,7 +950,11 @@ THREE.Vector3.prototype = {
     var y = window.SIMD.Float32x4.extractLane(this.vector3d, 1);
     var z = window.SIMD.Float32x4.extractLane(this.vector3d, 2);
 
-    return ((v.x === x) && (v.y === y) && (v.z === z));
+    var vx = window.SIMD.Float32x4.extractLane(v, 0);
+    var vy = window.SIMD.Float32x4.extractLane(v, 1);
+    var vz = window.SIMD.Float32x4.extractLane(v, 2);
+
+    return ((vx === x) && (vy === y) && (vz === z));
 
   },
 
