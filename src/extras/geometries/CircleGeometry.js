@@ -32,11 +32,11 @@ THREE.CircleGeometry = function ( radius, segments, thetaStart, thetaLength ) {
 		var vertex = new THREE.Vector3();
 		var segment = thetaStart + i / segments * thetaLength;
 
-		vertex.x = radius * Math.cos( segment );
-		vertex.y = radius * Math.sin( segment );
+		vertex.setX(radius * Math.cos( segment ));
+		vertex.setY(radius * Math.sin( segment ));
 
 		this.vertices.push( vertex );
-		uvs.push( new THREE.Vector2( ( vertex.x / radius + 1 ) / 2, ( vertex.y / radius + 1 ) / 2 ) );
+		uvs.push( new THREE.Vector2( ( vertex.getComponent(0) / radius + 1 ) / 2, ( vertex.getComponent(1) / radius + 1 ) / 2 ) );
 
 	}
 

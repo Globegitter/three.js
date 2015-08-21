@@ -38,9 +38,9 @@ THREE.AudioListener.prototype.updateMatrixWorld = ( function () {
 		orientation.set( 0, 0, -1 ).applyQuaternion( quaternion );
 		velocity.subVectors( position, positionPrev );
 
-		listener.setPosition( position.x, position.y, position.z );
-		listener.setOrientation( orientation.x, orientation.y, orientation.z, up.x, up.y, up.z );
-		listener.setVelocity( velocity.x, velocity.y, velocity.z );
+		listener.setPosition( position.getComponent(0), position.getComponent(1), position.getComponent(2) );
+		listener.setOrientation( orientation.getComponent(0), orientation.getComponent(1), orientation.getComponent(2), up.getComponent(0), up.getComponent(1), up.getComponent(2) );
+		listener.setVelocity( velocity.getComponent(0), velocity.getComponent(1), velocity.getComponent(2) );
 
 		positionPrev.copy( position );
 

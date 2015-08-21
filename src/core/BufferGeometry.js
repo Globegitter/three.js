@@ -156,17 +156,17 @@ THREE.BufferGeometry.prototype = {
       var b = vertices[face.b];
       var c = vertices[face.c];
 
-      positions[i3] = a.x;
-      positions[i3 + 1] = a.y;
-      positions[i3 + 2] = a.z;
+      positions[i3] = a.getComponent(0);
+      positions[i3 + 1] = a.getComponent(1);
+      positions[i3 + 2] = a.getComponent(2);
 
-      positions[i3 + 3] = b.x;
-      positions[i3 + 4] = b.y;
-      positions[i3 + 5] = b.z;
+      positions[i3 + 3] = b.getComponent(0);
+      positions[i3 + 4] = b.getComponent(1);
+      positions[i3 + 5] = b.getComponent(2);
 
-      positions[i3 + 6] = c.x;
-      positions[i3 + 7] = c.y;
-      positions[i3 + 8] = c.z;
+      positions[i3 + 6] = c.getComponent(0);
+      positions[i3 + 7] = c.getComponent(1);
+      positions[i3 + 8] = c.getComponent(2);
 
       if (hasFaceVertexNormals === true) {
 
@@ -174,33 +174,33 @@ THREE.BufferGeometry.prototype = {
         var nb = face.vertexNormals[1];
         var nc = face.vertexNormals[2];
 
-        normals[i3] = na.x;
-        normals[i3 + 1] = na.y;
-        normals[i3 + 2] = na.z;
+        normals[i3] = na.getComponent(0);
+        normals[i3 + 1] = na.getComponent(1);
+        normals[i3 + 2] = na.getComponent(2);
 
-        normals[i3 + 3] = nb.x;
-        normals[i3 + 4] = nb.y;
-        normals[i3 + 5] = nb.z;
+        normals[i3 + 3] = nb.getComponent(0);
+        normals[i3 + 4] = nb.getComponent(1);
+        normals[i3 + 5] = nb.getComponent(2);
 
-        normals[i3 + 6] = nc.x;
-        normals[i3 + 7] = nc.y;
-        normals[i3 + 8] = nc.z;
+        normals[i3 + 6] = nc.getComponent(0);
+        normals[i3 + 7] = nc.getComponent(1);
+        normals[i3 + 8] = nc.getComponent(2);
 
       } else {
 
         var n = face.normal;
 
-        normals[i3] = n.x;
-        normals[i3 + 1] = n.y;
-        normals[i3 + 2] = n.z;
+        normals[i3] = n.getComponent(0);
+        normals[i3 + 1] = n.getComponent(1);
+        normals[i3 + 2] = n.getComponent(2);
 
-        normals[i3 + 3] = n.x;
-        normals[i3 + 4] = n.y;
-        normals[i3 + 5] = n.z;
+        normals[i3 + 3] = n.getComponent(0);
+        normals[i3 + 4] = n.getComponent(1);
+        normals[i3 + 5] = n.getComponent(2);
 
-        normals[i3 + 6] = n.x;
-        normals[i3 + 7] = n.y;
-        normals[i3 + 8] = n.z;
+        normals[i3 + 6] = n.getComponent(0);
+        normals[i3 + 7] = n.getComponent(1);
+        normals[i3 + 8] = n.getComponent(2);
 
       }
 
@@ -246,14 +246,14 @@ THREE.BufferGeometry.prototype = {
         var uvb = faceVertexUvs[0][i][1];
         var uvc = faceVertexUvs[0][i][2];
 
-        uvs[i2] = uva.x;
-        uvs[i2 + 1] = uva.y;
+        uvs[i2] = uva.getComponent(0);
+        uvs[i2 + 1] = uva.getComponent(1);
 
-        uvs[i2 + 2] = uvb.x;
-        uvs[i2 + 3] = uvb.y;
+        uvs[i2 + 2] = uvb.getComponent(0);
+        uvs[i2 + 3] = uvb.getComponent(1);
 
-        uvs[i2 + 4] = uvc.x;
-        uvs[i2 + 5] = uvc.y;
+        uvs[i2 + 4] = uvc.getComponent(0);
+        uvs[i2 + 5] = uvc.getComponent(1);
 
       }
 
@@ -300,7 +300,7 @@ THREE.BufferGeometry.prototype = {
 
       }
 
-      if (isNaN(this.boundingBox.min.x) || isNaN(this.boundingBox.min.y) || isNaN(this.boundingBox.min.z)) {
+      if (isNaN(this.boundingBox.min.getComponent(0)) || isNaN(this.boundingBox.min.getComponent(1)) || isNaN(this.boundingBox.min.getComponent(2))) {
 
         THREE.error('THREE.BufferGeometry.computeBoundingBox: Computed min/max have NaN values. The "position" attribute is likely to have NaN values.');
 
@@ -441,17 +441,17 @@ THREE.BufferGeometry.prototype = {
             ab.subVectors(pA, pB);
             cb.cross(ab);
 
-            normals[vA] += cb.x;
-            normals[vA + 1] += cb.y;
-            normals[vA + 2] += cb.z;
+            normals[vA] += cb.getComponent(0);
+            normals[vA + 1] += cb.getComponent(1);
+            normals[vA + 2] += cb.getComponent(2);
 
-            normals[vB] += cb.x;
-            normals[vB + 1] += cb.y;
-            normals[vB + 2] += cb.z;
+            normals[vB] += cb.getComponent(0);
+            normals[vB + 1] += cb.getComponent(1);
+            normals[vB + 2] += cb.getComponent(2);
 
-            normals[vC] += cb.x;
-            normals[vC + 1] += cb.y;
-            normals[vC + 2] += cb.z;
+            normals[vC] += cb.getComponent(0);
+            normals[vC + 1] += cb.getComponent(1);
+            normals[vC + 2] += cb.getComponent(2);
 
           }
 
@@ -471,17 +471,17 @@ THREE.BufferGeometry.prototype = {
           ab.subVectors(pA, pB);
           cb.cross(ab);
 
-          normals[i] = cb.x;
-          normals[i + 1] = cb.y;
-          normals[i + 2] = cb.z;
+          normals[i] = cb.getComponent(0);
+          normals[i + 1] = cb.getComponent(1);
+          normals[i + 2] = cb.getComponent(2);
 
-          normals[i + 3] = cb.x;
-          normals[i + 4] = cb.y;
-          normals[i + 5] = cb.z;
+          normals[i + 3] = cb.getComponent(0);
+          normals[i + 4] = cb.getComponent(1);
+          normals[i + 5] = cb.getComponent(2);
 
-          normals[i + 6] = cb.x;
-          normals[i + 7] = cb.y;
-          normals[i + 8] = cb.z;
+          normals[i + 6] = cb.getComponent(0);
+          normals[i + 7] = cb.getComponent(1);
+          normals[i + 8] = cb.getComponent(2);
 
         }
 
@@ -559,20 +559,20 @@ THREE.BufferGeometry.prototype = {
       uvB.fromArray(uvs, b * 2);
       uvC.fromArray(uvs, c * 2);
 
-      x1 = vB.x - vA.x;
-      x2 = vC.x - vA.x;
+      x1 = vB.getComponent(0) - vA.getComponent(0);
+      x2 = vC.getComponent(0) - vA.getComponent(0);
 
-      y1 = vB.y - vA.y;
-      y2 = vC.y - vA.y;
+      y1 = vB.getComponent(1) - vA.getComponent(1);
+      y2 = vC.getComponent(1) - vA.getComponent(1);
 
-      z1 = vB.z - vA.z;
-      z2 = vC.z - vA.z;
+      z1 = vB.getComponent(2) - vA.getComponent(2);
+      z2 = vC.getComponent(2) - vA.getComponent(2);
 
-      s1 = uvB.x - uvA.x;
-      s2 = uvC.x - uvA.x;
+      s1 = uvB.getComponent(0) - uvA.getComponent(0);
+      s2 = uvC.getComponent(0) - uvA.getComponent(0);
 
-      t1 = uvB.y - uvA.y;
-      t2 = uvC.y - uvA.y;
+      t1 = uvB.getComponent(1) - uvA.getComponent(1);
+      t2 = uvC.getComponent(1) - uvA.getComponent(1);
 
       r = 1.0 / (s1 * t2 - s2 * t1);
 
@@ -648,9 +648,9 @@ THREE.BufferGeometry.prototype = {
       test = tmp2.dot(tan2[v]);
       w = (test < 0.0) ? -1.0 : 1.0;
 
-      tangents[v * 4] = tmp.x;
-      tangents[v * 4 + 1] = tmp.y;
-      tangents[v * 4 + 2] = tmp.z;
+      tangents[v * 4] = tmp.getComponent(0);
+      tangents[v * 4 + 1] = tmp.getComponent(1);
+      tangents[v * 4 + 2] = tmp.getComponent(2);
       tangents[v * 4 + 3] = w;
 
     }

@@ -91,11 +91,11 @@ THREE.TubeGeometry = function(path, segments, radius, radialSegments, closed, ta
       cy = r * Math.sin(v);
 
       pos2.copy(pos);
-      pos2.x += cx * normal.x + cy * binormal.x;
-      pos2.y += cx * normal.y + cy * binormal.y;
-      pos2.z += cx * normal.z + cy * binormal.z;
+      pos2.setX(pos2.getComponent(0) + cx * normal.getComponent(0) + cy * binormal.getComponent(0));
+      pos2.setY(pos2.getComponent(1) + cx * normal.getComponent(1) + cy * binormal.getComponent(1));
+      pos2.setZ(pos2.getComponent(2) + cx * normal.getComponent(2) + cy * binormal.getComponent(2));
 
-      grid[i][j] = vert(pos2.x, pos2.y, pos2.z);
+      grid[i][j] = vert(pos2.getComponent(0), pos2.getComponent(1), pos2.getComponent(2));
 
     }
   }
@@ -219,9 +219,9 @@ THREE.TubeGeometry.FrenetFrames = function(path, segments, closed) {
     normals[0] = new THREE.Vector3();
     binormals[0] = new THREE.Vector3();
     smallest = Number.MAX_VALUE;
-    tx = Math.abs(tangents[0].x);
-    ty = Math.abs(tangents[0].y);
-    tz = Math.abs(tangents[0].z);
+    tx = Math.abs(tangents[0].getComponent(0));
+    ty = Math.abs(tangents[0].getComponent(1));
+    tz = Math.abs(tangents[0].getComponent(2));
 
     if (tx <= smallest) {
       smallest = tx;

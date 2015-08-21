@@ -47,9 +47,9 @@ THREE.CylinderGeometry = function ( radiusTop, radiusBottom, height, radialSegme
 			var u = x / radialSegments;
 
 			var vertex = new THREE.Vector3();
-			vertex.x = radius * Math.sin( u * thetaLength + thetaStart );
-			vertex.y = - v * height + heightHalf;
-			vertex.z = radius * Math.cos( u * thetaLength + thetaStart );
+			vertex.setX(radius * Math.sin( u * thetaLength + thetaStart ));
+			vertex.setY(- v * height + heightHalf);
+			vertex.setZ(radius * Math.cos( u * thetaLength + thetaStart ));
 
 			this.vertices.push( vertex );
 
@@ -80,8 +80,8 @@ THREE.CylinderGeometry = function ( radiusTop, radiusBottom, height, radialSegme
 
 		}
 
-		na.setY( Math.sqrt( na.x * na.x + na.z * na.z ) * tanTheta ).normalize();
-		nb.setY( Math.sqrt( nb.x * nb.x + nb.z * nb.z ) * tanTheta ).normalize();
+		na.setY( Math.sqrt( na.getComponent(0) * na.getComponent(0) + na.getComponent(2) * na.getComponent(2) ) * tanTheta ).normalize();
+		nb.setY( Math.sqrt( nb.getComponent(0) * nb.getComponent(0) + nb.getComponent(2) * nb.getComponent(2) ) * tanTheta ).normalize();
 
 		for ( y = 0; y < heightSegments; y ++ ) {
 
@@ -128,7 +128,7 @@ THREE.CylinderGeometry = function ( radiusTop, radiusBottom, height, radialSegme
 
 			var uv1 = uvs[ 0 ][ x ].clone();
 			var uv2 = uvs[ 0 ][ x + 1 ].clone();
-			var uv3 = new THREE.Vector2( uv2.x, 0 );
+			var uv3 = new THREE.Vector2( uv2.getComponent(0), 0 );
 
 			this.faces.push( new THREE.Face3( v1, v2, v3, [ n1, n2, n3 ] ) );
 			this.faceVertexUvs[ 0 ].push( [ uv1, uv2, uv3 ] );
@@ -155,7 +155,7 @@ THREE.CylinderGeometry = function ( radiusTop, radiusBottom, height, radialSegme
 
 			var uv1 = uvs[ heightSegments ][ x + 1 ].clone();
 			var uv2 = uvs[ heightSegments ][ x ].clone();
-			var uv3 = new THREE.Vector2( uv2.x, 1 );
+			var uv3 = new THREE.Vector2( uv2.getComponent(0), 1 );
 
 			this.faces.push( new THREE.Face3( v1, v2, v3, [ n1, n2, n3 ] ) );
 			this.faceVertexUvs[ 0 ].push( [ uv1, uv2, uv3 ] );

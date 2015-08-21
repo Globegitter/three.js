@@ -12,7 +12,7 @@ THREE.CurvePath = function () {
 
 	this.curves = [];
 	this.bends = [];
-	
+
 	this.autoClose = false; // Automatically closes the path
 };
 
@@ -37,11 +37,11 @@ THREE.CurvePath.prototype.closePath = function() {
 	// Add a line curve if start and end of lines are not connected
 	var startPoint = this.curves[0].getPoint(0);
 	var endPoint = this.curves[this.curves.length - 1].getPoint(1);
-	
+
 	if (! startPoint.equals(endPoint)) {
 		this.curves.push( new THREE.LineCurve(endPoint, startPoint) );
 	}
-	
+
 };
 
 // To get accurate point with reference to
@@ -156,16 +156,16 @@ THREE.CurvePath.prototype.getBoundingBox = function () {
 
 		p = points[ i ];
 
-		if ( p.x > maxX ) maxX = p.x;
-		else if ( p.x < minX ) minX = p.x;
+		if ( p.getComponent(0) > maxX ) maxX = p.getComponent(0);
+		else if ( p.getComponent(0) < minX ) minX = p.getComponent(0);
 
-		if ( p.y > maxY ) maxY = p.y;
-		else if ( p.y < minY ) minY = p.y;
+		if ( p.getComponent(1) > maxY ) maxY = p.getComponent(1);
+		else if ( p.getComponent(1) < minY ) minY = p.getComponent(1);
 
 		if ( v3 ) {
 
-			if ( p.z > maxZ ) maxZ = p.z;
-			else if ( p.z < minZ ) minZ = p.z;
+			if ( p.getComponent(2) > maxZ ) maxZ = p.getComponent(2);
+			else if ( p.getComponent(2) < minZ ) minZ = p.getComponent(2);
 
 		}
 
@@ -221,7 +221,7 @@ THREE.CurvePath.prototype.createGeometry = function( points ) {
 
 	for ( var i = 0; i < points.length; i ++ ) {
 
-		geometry.vertices.push( new THREE.Vector3( points[ i ].x, points[ i ].y, points[ i ].z || 0) );
+		geometry.vertices.push( new THREE.Vector3( points[ i ].getComponent(0), points[ i ].getComponent(1), points[ i ].getComponent(2) || 0) );
 
 	}
 
@@ -298,8 +298,8 @@ THREE.CurvePath.prototype.getWrapPoints = function ( oldPts, path ) {
 
 		p = oldPts[ i ];
 
-		oldX = p.x;
-		oldY = p.y;
+		oldX = p.getComponent(0);
+		oldY = p.getComponent(1);
 
 		xNorm = oldX / bounds.maxX;
 
@@ -312,14 +312,13 @@ THREE.CurvePath.prototype.getWrapPoints = function ( oldPts, path ) {
 
 		var pathPt = path.getPoint( xNorm );
 		var normal = path.getTangent( xNorm );
-		normal.set( - normal.y, normal.x ).multiplyScalar( oldY );
+		normal.set( - normal.getComponent(1), normal.getComponent(0) ).multiplyScalar( oldY );
 
-		p.x = pathPt.x + normal.x;
-		p.y = pathPt.y + normal.y;
+		p.setX(pathPt.getComponent(0) + normal.getComponent(0));
+		p.setY(pathPt.getComponent(1) + normal.getComponent(1));
 
 	}
 
 	return oldPts;
 
 };
-

@@ -466,17 +466,17 @@ THREE.Geometry.prototype = {
 			uvB = uv[ ub ];
 			uvC = uv[ uc ];
 
-			x1 = vB.x - vA.x;
-			x2 = vC.x - vA.x;
-			y1 = vB.y - vA.y;
-			y2 = vC.y - vA.y;
-			z1 = vB.z - vA.z;
-			z2 = vC.z - vA.z;
+			x1 = vB.getComponent(0) - vA.getComponent(0);
+			x2 = vC.getComponent(0) - vA.getComponent(0);
+			y1 = vB.getComponent(1) - vA.getComponent(1);
+			y2 = vC.getComponent(1) - vA.getComponent(1);
+			z1 = vB.getComponent(2) - vA.getComponent(2);
+			z2 = vC.getComponent(2) - vA.getComponent(2);
 
-			s1 = uvB.x - uvA.x;
-			s2 = uvC.x - uvA.x;
-			t1 = uvB.y - uvA.y;
-			t2 = uvC.y - uvA.y;
+			s1 = uvB.getComponent(0) - uvA.getComponent(0);
+			s2 = uvC.getComponent(0) - uvA.getComponent(0);
+			t1 = uvB.getComponent(1) - uvA.getComponent(1);
+			t2 = uvC.getComponent(1) - uvA.getComponent(1);
 
 			r = 1.0 / ( s1 * t2 - s2 * t1 );
 			sdir.set( ( t2 * x1 - t1 * x2 ) * r,
@@ -530,7 +530,7 @@ THREE.Geometry.prototype = {
 				test = tmp2.dot( tan2[ vertexIndex ] );
 				w = ( test < 0.0 ) ? - 1.0 : 1.0;
 
-				face.vertexTangents[ i ] = new THREE.Vector4( tmp.x, tmp.y, tmp.z, w );
+				face.vertexTangents[ i ] = new THREE.Vector4( tmp.getComponent(0), tmp.getComponent(1), tmp.getComponent(2), w );
 
 			}
 
@@ -728,7 +728,7 @@ THREE.Geometry.prototype = {
 		for ( i = 0, il = this.vertices.length; i < il; i ++ ) {
 
 			v = this.vertices[ i ];
-			key = Math.round( v.x * precision ) + '_' + Math.round( v.y * precision ) + '_' + Math.round( v.z * precision );
+			key = Math.round( v.getComponent(0) * precision ) + '_' + Math.round( v.getComponent(1) * precision ) + '_' + Math.round( v.getComponent(2) * precision );
 
 			if ( verticesMap[ key ] === undefined ) {
 
@@ -830,7 +830,7 @@ THREE.Geometry.prototype = {
 		for ( var i = 0; i < this.vertices.length; i ++ ) {
 
 			var vertex = this.vertices[ i ];
-			vertices.push( vertex.x, vertex.y, vertex.z );
+			vertices.push( vertex.getComponent(0), vertex.getComponent(1), vertex.getComponent(2) );
 
 		}
 
@@ -935,7 +935,7 @@ THREE.Geometry.prototype = {
 
 		function getNormalIndex( normal ) {
 
-			var hash = normal.x.toString() + normal.y.toString() + normal.z.toString();
+			var hash = normal.getComponent(0).toString() + normal.getComponent(1).toString() + normal.getComponent(2).toString();
 
 			if ( normalsHash[ hash ] !== undefined ) {
 
@@ -944,7 +944,7 @@ THREE.Geometry.prototype = {
 			}
 
 			normalsHash[ hash ] = normals.length / 3;
-			normals.push( normal.x, normal.y, normal.z );
+			normals.push( normal.getComponent(0), normal.getComponent(1), normal.getComponent(2) );
 
 			return normalsHash[ hash ];
 
@@ -969,7 +969,7 @@ THREE.Geometry.prototype = {
 
 		function getUvIndex( uv ) {
 
-			var hash = uv.x.toString() + uv.y.toString();
+			var hash = uv.getComponent(0).toString() + uv.getComponent(1).toString();
 
 			if ( uvsHash[ hash ] !== undefined ) {
 
@@ -978,7 +978,7 @@ THREE.Geometry.prototype = {
 			}
 
 			uvsHash[ hash ] = uvs.length / 2;
-			uvs.push( uv.x, uv.y );
+			uvs.push( uv.getComponent(0), uv.getComponent(1) );
 
 			return uvsHash[ hash ];
 
